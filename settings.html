@@ -417,7 +417,7 @@ h1 span {
     label.textContent = "صورة رقم " + i;
 
     // الصور بجانب index.html في المجلد الرئيسي
-    img.src = " i + ".jpg";
+    img.src = i + ".jpg";
 
     const photo = {
       number: i,
@@ -515,7 +515,7 @@ h1 span {
   nextBtn.addEventListener("click", function () {
     showNext(1);
   });
-k
+
   // الضغط على الخلفية فقط يغلق الصورة
   viewer.addEventListener("click", function (event) {
     if (event.target === viewer) {
