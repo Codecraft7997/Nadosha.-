@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>لعبتنا الصغيرة ♡</title>
+
+<style>
+:root {
+  --gold: #e8d2a0;
+  --cream: #fff8ed;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--cream);
+  font-family: Tahoma, Arial, sans-serif;
+  background: #101827;
+}
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: url("PUT-YOUR-BACKGROUND-IMAGE-URL-HERE");
+  background-size: cover;
+  background-position: center;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(8, 16, 31, .83);
+}
+main {
+  width: min(92%, 650px);
+  margin: auto;
+  padding: 25px 0;
+}
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.logo { color: var(--gold); font-weight: bold; }
+.back { color: var(--gold); text-decoration: none; }
+
+.card {
+  padding: clamp(22px, 5vw, 40px);
+  border: 1px solid #e8d2a055;
+  border-radius: 26px;
+  background: #111d30e8;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px #0005;
+}
+.center { text-align: center; }
+.symbol { font-size: 42px; }
+h1 { font-size: clamp(27px, 6vw, 39px); }
+p { color: #e2dcd2; line-height: 2; }
+
+.progress {
+  height: 6px;
+  margin: 22px 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff18;
+}
+#bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #c3a568, #f5e7c5);
+  transition: width .3s;
+}
+#question {
+  font-size: 21px;
+  line-height: 1.9;
+  margin: 20px 0;
+}
+.answers { display: grid; gap: 12px; }
+.answer {
+  width: 100%;
+  padding: 15px;
+  color: var(--cream);
+  text-align: right;
+  font: inherit;
+  background: #ffffff08;
+  border: 1px solid #ffffff28;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: .2s;
+}
+.answer:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: #e8d2a018;
+}
+.answer:disabled { cursor: default; }
+.answer.wrong {
+  border-color: #ff8e9b;
+  background: #ff8e9b16;
+}
+.answer.correct {
+  border-color: #a5d6a7;
+  background: #a5d6a716;
+}
+#feedback {
+  min-height: 35px;
+  margin-top: 17px;
+  text-align: center;
+  line-height: 1.9;
+  color: var(--gold);
+}
+.btn {
+  display: inline-block;
+  padding: 14px 24px;
+  color: #172033;
+  background: linear-gradient(135deg, #f5e7c5, #d4b77b);
+  border: 0;
+  border-radius: 13px;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+.hidden { display: none !important; }
+#letters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  direction: rtl;
+  margin: 20px 0;
+}
+.letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 44px;
+  border: 1px solid #e8d2a080;
+  border-radius: 9px;
+  color: var(--gold);
+  font-size: 21px;
+}
+.word-space { width: 13px; }
+.result-text {
+  color: var(--gold);
+  font-size: clamp(23px, 5vw, 31px);
+  line-height: 2.2;
+}
+footer {
+  padding: 22px 0;
+  color: #e2dcd2;
+  text-align: center;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+<div class="bg"></div>
+
+<main>
+  <div class="top">
+    <span class="logo">♡ NONTY PROJECT</span>
+    <a class="back" href="../index.html">← الرئيسية</a>
+  </div>
+
+  <section class="card center" id="start">
+    <div class="symbol">🎮</div>
+    <h1>ركزي معايا يا نونتي 🤍</h1>
+    <p>
+      عندنا شوية أسئلة خفيفة، وكل إجابة صح هتقرّبنا
+      من رسالة مستخبية ليكي.
+      ولو غلطتي، عادي جدًا، حاولي تاني براحتك.
+    </p>
+    <button class="btn" onclick="begin()">يلا نبدأ ✨</button>
+  </section>
+
+  <section class="card hidden" id="game">
+    <div class="center">
+      <div class="symbol">🌷</div>
+      <p id="count"></p>
+    </div>
+
+    <div class="progress"><div id="bar"></div></div>
+    <div id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div id="feedback" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card center hidden" id="result">
+    <div class="symbol">💌</div>
+    <h1>جمعنا الرسالة كلها!</h1>
+    <p>كل إجابة صح قرّبتنا من الكلام ده:</p>
+    <div id="letters"></div>
+    <div class="result-text">انا اسف يا عمري حقك عليا انا يا نور عيني</div>
+    <p>
+    </p>
+    انا اسف بجد وحقك عليا انا ي نن عيني
+    <a class="btn" href="../index.html">الرجوع للرئيسية 🏠</a>
+  </section>
+
+  <footer>انت عمري كله 🫂😍</footer>
+</main>
+
+<script>
+const questions = [
+  {q:"إيه الحيوان اللي معروف بملك الغابة؟",a:["أسد","فيل","حصان"],c:0},
+  {q:"إيه الحشرة اللي بتنتج العسل؟",a:["فراشة","نحلة","نملة"],c:1},
+  {q:"إيه عاصمة مصر؟",a:["أسوان","الإسكندرية","القاهرة"],c:2},
+  {q:"إيه الحيوان اللي بيعيش في البحر وبيتنفس بالخياشيم؟",a:["كلب","سمكة","قطة"],c:1},
+  {q:"إيه الطائر اللي بيطلع بيض؟",a:["فيل","قرد","فرخة"],c:2},
+  {q:"إيه الحيوان اللي بيقول مياو؟",a:["قطة","كلب","حصان"],c:0},
+  {q:"إيه الكوكب اللي بنعيش عليه؟",a:["المريخ","الأرض","زحل"],c:1},
+  {q:"إيه اسم النجم اللي بينوّر النهار؟",a:["القمر","المريخ","الشمس"],c:2},
+  {q:"إيه الحيوان اللي عنده خرطوم؟",a:["زرافة","فيل","نمر"],c:1},
+  {q:"إيه الفاكهة الصفراء المشهورة؟",a:["موز","تفاح","عنب"],c:0},
+  {q:"إيه الفاكهة اللي لونها أحمر غالبًا؟",a:["ليمون","رمان","موز"],c:1},
+  {q:"إيه الطائر اللي بيعيش في المناطق الباردة ومش بيطير؟",a:["عصفور","نسر","بطريق"],c:2},
+  {q:"إيه الحيوان اللي بيعيش في الصحراء وبيستحمل العطش؟",a:["حصان","قطة","جمل"],c:0},
+  {q:"إيه الحاجة اللي بنستخدمها عشان نعرف الوقت؟",a:["قلم","ساعة","كتاب"],c:1},
+  {q:"إيه الشيء اللي بنقرأ فيه القصص؟",a:["كراسة","باب","كتاب"],c:2},
+  {q:"إيه الفاكهة اللي اسمها بيبدأ بحرف ع؟",a:["عنب","تفاح","موز"],c:0},
+  {q:"إيه الحاجة اللي بنستخدمها عشان نمسح الكتابة بالقلم الرصاص؟",a:["مبراة","قلم","أستيكة"],c:2},
+  {q:"إيه اليوم اللي بييجي بعد الجمعة؟",a:["الأحد","السبت","الإثنين"],c:1},
+  {q:"إيه الحيوان اللي بيعيش في الماء وعنده زعانف؟",a:["حمار","قطة","سمكة"],c:2},
+  {q:"إيه الشيء اللي بنشرب فيه المية؟",a:["كوباية","كتاب","مفتاح"],c:0},
+  {q:"إيه الفاكهة اللي لونها أخضر واسمها بيبدأ بحرف ل؟",a:["تفاح","ليمون","موز"],c:1},
+  {q:"إيه الحاجة اللي بنستخدمها لفتح الباب؟",a:["كرسي","كتاب","مفتاح"],c:2},
+  {q:"إيه الشيء اللي بنشوفه في السما بالليل؟",a:["نجوم","أشجار","جبال"],c:0},
+  {q:"إيه الحيوان اللي معروف بطول رقبته؟",a:["فيل","زرافة","قطة"],c:1},
+  {q:"إيه الشيء اللي بيقع من السما وقت المطر؟",a:["تراب","رمل","ماء"],c:2},
+  {q:"إيه العضو اللي بنسمع بيه؟",a:["أذن","عين","أنف"],c:0},
+  {q:"إيه الفاكهة اللي ممكن نعمل منها عصير برتقالي؟",a:["موز","برتقال","عنب"],c:1},
+  {q:"إيه الحيوان اللي بيعيش في البيت وبيحرسه أحيانًا؟",a:["قطة","سمكة","كلب"],c:2},
+  {q:"إيه الحاجة اللي بنلبسها في رجلينا؟",a:["حذاء","قبعة","قميص"],c:0},
+  {q:"إيه اللي بنستخدمه عشان نكتب على السبورة؟",a:["فرشاة","طباشير","ممحاة"],c:1},
+  {q:"إيه الطائر اللي بيقدر يقلد أصوات البشر؟",a:["نسر","حمامة","ببغاء"],c:2}
+];
+
+const targetLetters = [
+  "ا","ن","ا",
+  "ا","س","ف",
+  "ي","ا",
+  "ع","م","ر","ي",
+  "ح","ق","ك",
+  "ع","ل","ي","ا",
+  "ا","ن","ا",
+  "ي","ا",
+  "ن","و","ر",
+  "ع","ي","ن","ي"
+];
+
+const phrase = "انا اسف يا عمري حقك عليا انا يا نور عيني";
+let index = 0;
+
+function begin() {
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+  showQuestion();
+}
+
+function showQuestion() {
+  const item = questions[index];
+
+  document.getElementById("count").textContent =
+    `السؤال ${index + 1} من ${questions.length}`;
+
+  document.getElementById("bar").style.width =
+    `${index / questions.length * 100}%`;
+
+  document.getElementById("question").textContent = item.q;
+
+  const area = document.getElementById("answers");
+  area.innerHTML = "";
+  document.getElementById("feedback").textContent = "";
+
+  item.a.forEach((answer, i) => {
+    const button = document.createElement("button");
+    button.className = "answer";
+    button.textContent = answer;
+    button.onclick = () => choose(i, button);
+    area.appendChild(button);
+  });
+}
+
+function choose(choice, button) {
+  const item = questions[index];
+  const feedback = document.getElementById("feedback");
+
+  if (choice !== item.c) {
+    button.classList.add("wrong");
+    feedback.textContent = "ركزي تاني يا نونتي 🤍 جربي إجابة تانية!";
+    return;
+  }
+
+  const buttons = document.querySelectorAll(".answer");
+  buttons.forEach(b => b.disabled = true);
+  button.classList.add("correct");
+
+  feedback.textContent = "برافو عليكي! إجابة صح ✨";
+  document.getElementById("bar").style.width =
+    `${(index + 1) / questions.length * 100}%`;
+
+  const next = document.createElement("button");
+  next.className = "btn";
+  next.style.display = "block";
+  next.style.margin = "18px auto 0";
+  next.textContent =
+    index === questions.length - 1 ? "شوفي الرسالة 💌" : "السؤال اللي بعده ←";
+
+  next.onclick = () => {
+    index++;
+    if (index < questions.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  };
+
+  feedback.appendChild(document.createElement("br"));
+  feedback.appendChild(next);
+}
+
+function showResult() {
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  const letters = document.getElementById("letters");
+  letters.innerHTML = "";
+
+  phrase.split("").forEach(char => {
+    if (char === " ") {
+      const spacer = document.createElement("span");
+      spacer.className = "word-space";
+      letters.appendChild(spacer);
+    } else {
+      const span = document.createElement("span");
+      span.className = "letter";
+      span.textContent = char;
+      letters.appendChild(span);
+    }
+  });
+
+  try {
+    sessionStorage.setItem("nontyGameMessage", phrase);
+    sessionStorage.setItem("nontyCollectedLetters", JSON.stringify(targetLetters));
+  } catch (e) {}
+}
+</script>
+</body>
+</html>

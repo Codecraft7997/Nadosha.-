@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>جوابك بإيدي | لنونتي 🤍</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --navy: #101827;
+  --gold: #e8d2a0;
+  --cream: #fff8ed;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--cream);
+  font-family: Tahoma, Arial, sans-serif;
+  background:
+    radial-gradient(ellipse at top, #26354d 0%, transparent 55%),
+    var(--navy);
+}
+
+header {
+  width: min(92%, 850px);
+  margin: auto;
+  padding: 23px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.back {
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+main {
+  width: min(92%, 850px);
+  margin: auto;
+  padding-bottom: 45px;
+}
+
+.hero {
+  text-align: center;
+  padding: 35px 10px 25px;
+}
+
+.envelope {
+  font-size: 55px;
+  margin-bottom: 12px;
+}
+
+h1 {
+  color: var(--gold);
+  font-size: clamp(29px, 6vw, 42px);
+  margin: 10px 0;
+}
+
+.hero p {
+  color: #d5d8df;
+  line-height: 2;
+  font-size: 15px;
+  max-width: 550px;
+  margin: 12px auto;
+}
+
+.divider {
+  width: 90px;
+  height: 2px;
+  background: var(--gold);
+  margin: 25px auto;
+  opacity: .7;
+}
+
+.note {
+  text-align: center;
+  color: #c9cbd1;
+  font-size: 13px;
+  margin: 20px 0;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.photo-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e8d2a044;
+  border-radius: 19px;
+  background: #ffffff08;
+  cursor: pointer;
+  transition: transform .25s, border-color .25s;
+}
+
+.photo-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+}
+
+.photo-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  width: min(100%, 390px);
+  justify-self: center;
+}
+
+.photo-frame {
+  height: 235px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f5eddf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.photo-label {
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 14px;
+  margin: 13px 0 5px;
+  text-align: center;
+}
+
+.photo-hint {
+  color: #c7c8ce;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.footer-card {
+  margin-top: 28px;
+  padding: 25px 18px;
+  text-align: center;
+  border: 1px solid #e8d2a044;
+  border-radius: 20px;
+  background: #ffffff08;
+}
+
+.footer-card h2 {
+  color: var(--gold);
+  font-size: 23px;
+}
+
+.footer-card p {
+  line-height: 2.1;
+  color: #e0dcd5;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 10px;
+  color: #bcb7ae;
+  font-size: 12px;
+}
+
+/* تكبير الصور */
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: #050912ed;
+}
+
+.viewer.active {
+  display: flex;
+}
+
+.viewer-content {
+  width: min(100%, 650px);
+  text-align: center;
+}
+
+.viewer img {
+  display: block;
+  width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #f5eddf;
+}
+
+.viewer-title {
+  color: var(--gold);
+  margin: 14px 0;
+}
+
+.viewer-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.viewer button {
+  padding: 11px 17px;
+  border: 1px solid #e8d2a077;
+  border-radius: 12px;
+  color: var(--cream);
+  background: #18243a;
+  font: inherit;
+  cursor: pointer;
+}
+
+.viewer button:hover {
+  background: #293751;
+}
+
+.viewer .close {
+  color: var(--navy);
+  background: var(--gold);
+}
+
+@media (max-width: 480px) {
+  .gallery {
+    gap: 10px;
+  }
+
+  .photo-card {
+    padding: 8px;
+  }
+
+  .photo-frame {
+    height: 190px;
+  }
+
+  .photo-label {
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">♡ NONTY PROJECT</div>
+  <a class="back" href="../index.html">← الرئيسية</a>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="envelope">✉️</div>
+    <h1>جوابك بإيدي</h1>
+
+    <p>
+      المرة دي م هتقرَاي كلام مكتوب على شاشة وبس...
+      <br>
+      دي كلام بخط ايدي اللي زي الخرا 😂 زي ما بتحبي الجوابات ي نور عيني 🤍
+    </p>
+
+    <div class="divider"></div>
+
+    <p>
+      ي عمري  كل صورة هنا جزء ف بحر كلام ف قلبي ليكي والله
+      افتحيهم واحدة واحدة وخدي وقتك في كل كلمة ♡
+    </p>
+  </section>
+
+  <div class="note">اضغطي على أي صورة عشان تشوفيها بحجم أكبر ✨</div>
+
+  <section class="gallery" id="gallery"></section>
+
+  <section class="footer-card">
+    <div style="font-size:38px">🤍</div>
+    <h2>من إيدي لعيونك</h2>
+    <p>
+      يمكن الخط مش احسن حاجه بس انت م متخيله كميه المعاناه عشان الخط يطلع كده والله 😂
+      بس كل كلمة كتبتها هنا مخصوص ليكي عموما يعني.
+      <br>
+      وأتمنى لما تيجي ايتقر الجواب ده،
+      تلاقي فيه حاجة تفرّح قلبك.
+    </p>
+  </section>
+
+  <div class="footer">اتكتب بحب لكل الحب  ♡</div>
+
+</main>
+
+<div class="viewer" id="viewer" role="dialog"
+     aria-modal="true" aria-label="عرض صورة الجواب">
+
+  <div class="viewer-content">
+    <img id="largeImage" src="" alt="صورة من الجواب المكتوب بخط اليد">
+
+    <div class="viewer-title" id="viewerTitle"></div>
+
+    <div class="viewer-controls">
+      <button type="button" id="previous">→ السابقة</button>
+      <button type="button" class="close" id="closeViewer">إغلاق ✕</button>
+      <button type="button" id="next">التالية ←</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/*
+  ضع صور جوابك الخمس داخل مجلد images الموجود بجوار مجلد pages.
+
+  مثال لترتيب الملفات:
+  المشروع/
+    index.html
+    images/
+      letter1.jpg
+      letter2.jpg
+      letter3.jpg
+      letter4.jpg
+      letter5.jpg
+    pages/
+      quiet.html
+
+  لو الصور بصيغة PNG، غيّر امتداد .jpg إلى .png.
+*/
+
+const photos = [
+  {
+    src: "../letter1.jpg",
+    title: "الصفحة الأولى 🤍"
+  },
+  {
+    src: "../letter2.jpg",
+    title: "الصفحة الثانية ✨"
+  },
+  {
+    src: "../letter3.jpg",
+    title: "الصفحة الثالثة 💌"
+  },
+  {
+    src: "../letter4.jpg",
+    title: "الصفحة الرابعة ♡"
+  }
+];
+
+const gallery = document.getElementById("gallery");
+const viewer = document.getElementById("viewer");
+const largeImage = document.getElementById("largeImage");
+const viewerTitle = document.getElementById("viewerTitle");
+
+let currentIndex = 0;
+
+photos.forEach((photo, index) => {
+  const card = document.createElement("div");
+  card.className = "photo-card";
+  card.tabIndex = 0;
+  card.setAttribute("role", "button");
+  card.setAttribute("aria-label", "عرض " + photo.title);
+
+  const frame = document.createElement("div");
+  frame.className = "photo-frame";
+
+  const img = document.createElement("img");
+  img.src = photo.src;
+  img.alt = photo.title;
+  img.loading = "lazy";
+
+  img.onerror = () => {
+    img.alt = "لم يتم العثور على الصورة: " + photo.src;
+  };
+
+  const label = document.createElement("div");
+  label.className = "photo-label";
+  label.textContent = photo.title;
+
+  const hint = document.createElement("div");
+  hint.className = "photo-hint";
+  hint.textContent = "اضغطي لفتح الصورة";
+
+  frame.appendChild(img);
+  card.appendChild(frame);
+  card.appendChild(label);
+  card.appendChild(hint);
+
+  const open = () => openPhoto(index);
+
+  card.addEventListener("click", open);
+  card.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      open();
+    }
+  });
+
+  gallery.appendChild(card);
+});
+
+function openPhoto(index) {
+  currentIndex = index;
+  updateViewer();
+  viewer.classList.add("active");
+  document.getElementById("closeViewer").focus();
+}
+
+function updateViewer() {
+  const photo = photos[currentIndex];
+
+  largeImage.src = photo.src;
+  largeImage.alt = photo.title;
+  viewerTitle.textContent =
+    photo.title + " — " +
+    (currentIndex + 1).toLocaleString("ar-EG") +
+    " من " + photos.length.toLocaleString("ar-EG");
+}
+
+function closeViewer() {
+  viewer.classList.remove("active");
+}
+
+function changePhoto(direction) {
+  currentIndex =
+    (currentIndex + direction + photos.length) % photos.length;
+
+  updateViewer();
+}
+
+document.getElementById("previous").addEventListener("click", () => {
+  changePhoto(-1);
+});
+
+document.getElementById("next").addEventListener("click", () => {
+  changePhoto(1);
+});
+
+document.getElementById("closeViewer").addEventListener("click", closeViewer);
+
+viewer.addEventListener("click", event => {
+  if (event.target === viewer) {
+    closeViewer();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (!viewer.classList.contains("active")) return;
+
+  if (event.key === "Escape") closeViewer();
+  if (event.key === "ArrowRight") changePhoto(-1);
+  if (event.key === "ArrowLeft") changePhoto(1);
+});
+</script>
+
+</body>
+</html>
